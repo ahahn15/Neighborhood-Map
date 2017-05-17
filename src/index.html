@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type='text/javascript' src='../bower_components/knockout/dist/knockout.js'></script>
+</head>
+<body>
+<section id="location-list" style="float: left; height: auto;">
+  <div style="padding: 10px;">
+    <label>Filter: </label>
+    <input data-bind="value: filter" ></div>
+    <p> filter: <strong data-bind="text: filter"> </strong></div>
+</section>
+<div id="map" style="height: 600px; width: 800px;"></div>
+</body>
+<script>
+// need jquery for ajax calls
+
+  function initMap() {
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 11,
+        center: {lat: 53.0160, lng: -9.3774},
+        mapTypeId: 'roadmap'
+      });
+
+      var locations = [ // move this out
+        ['Cliffs of Moher', 52.9719, -9.4265],
+        ['Inishmaan', 53.0855, -9.5860],
+        ['Atlantic View Bed & Breakfast', 53.016001, -9.377577],
+        ['O\'Connors Pub', 53.0126, -9.3865],
+        ['Doolin Caves', 53.0433, -9.3447]
+      ];
+
+      var infoWindow = new google.maps.InfoWindow();
+      var marker;
+
+      for (var i = 0, l = locations.length; i < l; i++) {
+         marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+          map: map
+        });
+
+        // Allow each marker to have an info window
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(infoWindowContent[i][0]);
+                infoWindow.open(map, marker);
+            }
+        })(marker, i));
+      }
+   }
+
+
+// This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+function mapViewModel() {
+  this.filter = ko.observable("search here");
+    // this.firstName = ko.observable("Bert");
+    // this.lastName = ko.observable("Bertington");
+
+    // this.fullName = ko.computed(function() {
+    //     return this.firstName() + " " + this.lastName();
+    // }, this);
+
+    // this.capitalizeLastName = function() {
+    //     var currentVal = this.lastName();        // Read the current value
+    //     this.lastName(currentVal.toUpperCase()); // Write back a modified value
+    // };
+}
+
+// Activates knockout.js
+    ko.applyBindings(new mapViewModel());
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFOtXGVrg0wlWMG6WntWTs7VaH6D9_AIo&callback=initMap"></script>
+</html>

@@ -29,6 +29,7 @@ var filter;
 var currentLocations;
 var map;
 var markers = [];
+var infoWindow = null;
 
 function initMap() {
 
@@ -44,28 +45,32 @@ function initMap() {
  }
 
 function addMarker(location) {
-  var title = location.name;
-  var lat = location.lat;
-  var lng = location.lng;
-  var content = location.name;
+    var title = location.name;
+    var lat = location.lat;
+    var lng = location.lng;
+    var content = location.name;
 
-  var marker = new google.maps.Marker({
-    position: new google.maps.LatLng(lat, lng),
-    map: map,
-    title: title
-  });
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(lat, lng),
+      map: map,
+      title: title
+    });
 
-  var infoWindow = new google.maps.InfoWindow();
-  google.maps.event.addListener(marker, 'click', (function (marker, content) {
-      return function () {
-          infoWindow.setContent(content);
-          infoWindow.open(map, marker);
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-          setTimeout(function(){ marker.setAnimation(null); }, 750);
-      }
-  }));
+    markers.push(marker);
 
-  markers.push(marker);
+    google.maps.event.addListener(marker,'click', (function (marker, content) {
+        return function () {
+            if (infoWindow) {
+              infoWindow.close();
+            }
+
+            infoWindow = new google.maps.InfoWindow();
+            infoWindow.setContent(content);
+            infoWindow.open(map, marker);
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function(){ marker.setAnimation(null); }, 750);
+        }
+    })(marker, content));
 }
 
 function mapViewModel() {

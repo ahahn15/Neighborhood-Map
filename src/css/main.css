@@ -11,6 +11,7 @@ body {
    font-family: sans-serif;
    padding-top: 8px;
    margin-right: 16px;
+   width: 248px;
 }
 
 #filter-column label {

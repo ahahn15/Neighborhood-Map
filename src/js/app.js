@@ -27,35 +27,46 @@ var locations = [
 
 var filter;
 var currentLocations;
+var map;
+var markers = [];
 
 function initMap() {
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       zoom: 11,
       center: {lat: 53.0160, lng: -9.3774},
       mapTypeId: 'roadmap'
     });
 
-    var infoWindow = new google.maps.InfoWindow();
-    var marker;
-
     for (var i = 0, l = locations.length; i < l; i++) {
-       marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i]['lat'], locations[i]['lng']),
-        map: map,
-        title: locations[i]['name']
-      });
-
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-          return function() {
-              infoWindow.setContent(locations[i]['name']);
-              infoWindow.open(map, marker);
-              marker.setAnimation(google.maps.Animation.BOUNCE);
-              setTimeout(function(){ marker.setAnimation(null); }, 750);
-          }
-      })(marker, i));
+      addMarker(locations[i]);
     }
  }
+
+function addMarker(location) {
+  var title = location.name;
+  var lat = location.lat;
+  var lng = location.lng;
+  var content = location.name;
+
+  var marker = new google.maps.Marker({
+    position: new google.maps.LatLng(lat, lng),
+    map: map,
+    title: title
+  });
+
+  markers.push(marker);
+
+  var infoWindow = new google.maps.InfoWindow();
+  google.maps.event.addListener(marker, 'click', (function (marker, content) {
+      return function () {
+          infoWindow.setContent(content);
+          infoWindow.open(map, marker);
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+          setTimeout(function(){ marker.setAnimation(null); }, 750);
+      }
+  }));
+}
 
 function mapViewModel() {
 
@@ -68,10 +79,31 @@ function mapViewModel() {
         return locations;
     } else {
         return ko.utils.arrayFilter(locations, function(location) {
-            return location.name.toLowerCase().indexOf(filterTerm) !== -1;
+          if (location.name.toLowerCase().indexOf(filterTerm) !== -1) {
+            location.visible = true;
+            return true;
+          } else {
+            location.visible = false;
+            return false;
+          }
         });
     }
   }, mapViewModel);
+
+  currentLocations.subscribe(function() {
+    filterMarkers();
+  });
+}
+
+function filterMarkers() {
+  for (i = 0; i < markers.length; i++) {
+    marker = markers[i];
+    if (locations[i].visible) {
+      marker.setVisible(true);
+    } else {
+      marker.setVisible(false);
+    }
+  }
 }
 
 // Activates knockout.js

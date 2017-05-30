@@ -1,0 +1,45 @@
+body {
+   background-color: black;
+}
+
+#filter-column {
+   float: left;
+   height: auto;
+   width: 20%;
+   white-space: nowrap;
+   font-family: sans-serif;
+   padding-top: 8px;
+}
+
+#filter-column label {
+   color: #c0c5ce;
+   padding-right: 16px;
+   margin-left: 8px;
+}
+
+#filter-column input {
+   width: auto;
+   background-color: #c0c5ce;
+   font-size: 14px;
+}
+
+#location-list {
+   padding-left: 24px;
+}
+
+li {
+   padding-top: 8px;
+}
+
+li:nth-child(odd) {
+    color: #777;
+}
+
+li:nth-child(even) {
+    color: #c0c5ce;
+}
+
+#map {
+   height: 600px;
+   width: 80%;
+}

@@ -55,8 +55,6 @@ function addMarker(location) {
     title: title
   });
 
-  markers.push(marker);
-
   var infoWindow = new google.maps.InfoWindow();
   google.maps.event.addListener(marker, 'click', (function (marker, content) {
       return function () {
@@ -66,6 +64,8 @@ function addMarker(location) {
           setTimeout(function(){ marker.setAnimation(null); }, 750);
       }
   }));
+
+  markers.push(marker);
 }
 
 function mapViewModel() {
@@ -76,7 +76,10 @@ function mapViewModel() {
   currentLocations = ko.computed(function() {
     var filterTerm = filter().toLowerCase();
     if (!filterTerm) {
-        return locations;
+      for (var i = 0, l = locations.length; i < l; i++) {
+        locations[i].visible = true;
+      }
+      return locations;
     } else {
         return ko.utils.arrayFilter(locations, function(location) {
           if (location.name.toLowerCase().indexOf(filterTerm) !== -1) {

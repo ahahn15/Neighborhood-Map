@@ -3,31 +3,50 @@ var locations = [
     name:'Cliffs of Moher',
     lat: 52.9719,
     lng: -9.4265,
-    index: 0
+    index: 0,
+    wikiContent: ""
   },
   {
     name:'Inishmaan',
     lat: 53.0855,
     lng: -9.5860,
-    index: 1
+    index: 1,
+    wikiContent: ""
   },
   {
-    name:'Atlantic View Bed & Breakfast',
-    lat: 53.016001,
-    lng: -9.377577,
-    index: 2
+    name:'O\'Brien\'s Tower',
+    lat: 52.9730,
+    lng: -9.4305,
+    index: 2,
+    wikiContent: ""
   },
   {
-    name:'O\'Connors Pub',
-    lat: 53.0126,
-    lng: -9.3865,
-    index: 3
+    name:'Ballinalacken Castle',
+    lat: 53.0461,
+    lng: -9.3404,
+    index: 3,
+    wikiContent: ""
   },
   {
-    name:'Doolin Caves',
+    name:'Doolin Cave',
     lat: 53.0433,
     lng: -9.3447,
-    index: 4
+    index: 4,
+    wikiContent: ""
+  },
+  {
+    name:'The Burren',
+    lat: 53.0078,
+    lng: -9.0021,
+    index: 4,
+    wikiContent: ""
+  },
+  {
+    name:'Poulnabrone Dolmen',
+    lat: 53.0487,
+    lng: -9.1401,
+    index: 4,
+    wikiContent: ""
   }]
 
 var filter;
@@ -44,7 +63,9 @@ function initMap() {
       mapTypeId: 'roadmap'
     });
 
+    // get wiki data and create marker for each location
     for (var i = 0, l = locations.length; i < l; i++) {
+      getWikiData(locations[i]);
       addMarker(locations[i]);
     }
  }
@@ -53,28 +74,7 @@ function addMarker(location) {
     var title = location.name;
     var lat = location.lat;
     var lng = location.lng;
-    var content = location.name;
-
-     var contentString = '<div id="content">'+
-    '<div id="siteNotice">'+
-    '</div>'+
-    '<h1 id="firstHeading" class="firstHeading">' + title + '</h1>'+
-    '<div id="bodyContent">'+
-    '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-    'sandstone rock formation in the southern part of the '+
-    'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-    'south west of the nearest large town, Alice Springs; 450&#160;km '+
-    '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-    'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-    'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-    'Aboriginal people of the area. It has many springs, waterholes, '+
-    'rock caves and ancient paintings. Uluru is listed as a World '+
-    'Heritage Site.</p>'+
-    '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-    'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-    '(last visited June 22, 2009).</p>'+
-    '</div>'+
-    '</div>';
+    var content = location.wikiContent;
 
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(lat, lng),
@@ -84,7 +84,7 @@ function addMarker(location) {
 
     markers.push(marker);
 
-    google.maps.event.addListener(marker,'click', (function (marker, content) {
+    google.maps.event.addListener(marker,'click', (function (marker, content) { //?
         return function () {
             marker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function(){ marker.setAnimation(null); }, 750);
@@ -123,7 +123,7 @@ function mapViewModel() {
   });
 
   showLocation = function(location) {
-    showInfoWindow(markers[location.index], location.name);
+    showInfoWindow(markers[location.index], location.wikiContent);
   }
 }
 
@@ -147,6 +147,32 @@ function showInfoWindow(marker, content) {
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(function(){ marker.setAnimation(null); }, 750);
   infoWindow.open(map, marker);
+}
+
+function getWikiData(location) {
+  var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" +
+    location.name + "&format=json";
+
+  $.ajax({
+    url: wikiurl,
+    dataType: "jsonp",
+    success: function(response) {
+      let wikiContent = response[2][0];
+      let contentString =
+      '<div id="content">'+
+        '<h1>' + location.name + '</h1>'+
+        '<p>' + wikiContent + '</p>'+
+      '</div>';
+      location.wikiContent = contentString;
+    },
+    error: function() {
+      alert("An error occurred loading Wikipedia content. Please try again.");
+    }
+  });
+}
+
+function mapError() {
+  alert("Map was unable to load. Please try again.");
 }
 
 // Activates knockout.js

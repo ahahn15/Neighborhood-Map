@@ -26,10 +26,16 @@ gulp.task('move-js', [], function() {
       .pipe(gulp.dest('dist/js'));
 });
 
+// move bower components
+gulp.task('move-knockout', [], function() {
+  gulp.src('src/bower_components/knockout/**/**.*')
+      .pipe(gulp.dest('dist/bower_components/knockout'));
+});
+
 gulp.task('build-html', function(){
    return gulp.src('src/*.html')
       .pipe(htmlminify())
       .pipe(gulp.dest('dist'))
 });
 
-gulp.task('default', [ 'build-html', 'minify-css', 'move-js' ]);
+gulp.task('default', [ 'build-html', 'minify-css', 'move-js', 'move-knockout' ]);

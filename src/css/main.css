@@ -62,3 +62,7 @@ li:nth-child(even) {
    margin: 0 auto;
    display: block;
 }
+
+.location {
+   cursor: pointer;
+}

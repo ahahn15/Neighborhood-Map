@@ -38,14 +38,7 @@ let locations = [
     name:'The Burren',
     lat: 53.0078,
     lng: -9.0021,
-    index: 4,
-    wikiContent: ""
-  },
-  {
-    name:'Poulnabrone Dolmen',
-    lat: 53.0487,
-    lng: -9.1401,
-    index: 4,
+    index: 5,
     wikiContent: ""
   }]
 
@@ -80,6 +73,8 @@ function addMarker(location) {
     title: title
   });
 
+  // hold location indexes on markers
+  marker.locationIndex = location.index;
   markers.push(marker);
 
   marker.addListener('click', function() {
@@ -114,22 +109,31 @@ function mapViewModel() {
 
   // filtering locations should also filter markers on the map
   currentLocations.subscribe(function() {
+    if (infoWindow) {
+      infoWindow.close();
+    }
     filterMarkers();
   });
 
   // clicking on location name opens infowindow
   showLocation = function(location) {
-    showInfoWindow(markers[location.index], location.wikiContent);
+    marker = $.grep(markers, function(marker){ return marker.locationIndex === location.index; });
+    showInfoWindow(marker[0], location.wikiContent);
   }
 }
 
+function findMarker(marker, index) {
+  return marker.locationIndex === index;
+}
+
 function filterMarkers() {
+  let locationIndex;
   for (let i = 0; i < markers.length; i++) {
-    marker = markers[i];
-    if (locations[i].visible) {
-      marker.setVisible(true);
+     locationIndex = markers[i].locationIndex;
+    if (locations[locationIndex].visible) {
+      markers[i].setVisible(true);
     } else {
-      marker.setVisible(false);
+      markers[i].setVisible(false);
     }
   }
 }

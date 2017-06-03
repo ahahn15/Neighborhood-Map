@@ -40,18 +40,19 @@ let locations = [
     lng: -9.0021,
     index: 5,
     wikiContent: ""
-  }]
+  }];
 
 let filter;
 let currentLocations;
 let map;
 let markers = [];
 let infoWindow = null;
+let mapCenter = {lat: 53.0160, lng: -9.346};
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 11,
-      center: {lat: 53.0160, lng: -9.346},
+      center: mapCenter,
       mapTypeId: 'roadmap'
     });
 
@@ -82,7 +83,7 @@ function addMarker(location) {
   });
 }
 
-function mapViewModel() {
+function MapViewModel() {
 
   filter = ko.observable("");
 
@@ -105,24 +106,25 @@ function mapViewModel() {
           }
         });
     }
-  }, mapViewModel);
+  }, MapViewModel);
 
-  // filtering locations should also filter markers on the map
-  currentLocations.subscribe(function() {
-    if (infoWindow) {
-      infoWindow.close();
-    }
-    filterMarkers();
-  });
-
-  // clicking on location name opens infowindow
-  showLocation = function(location) {
-    marker = $.grep(markers, function(marker){ return marker.locationIndex === location.index; });
-    showInfoWindow(marker[0], location.wikiContent);
+// filtering locations should also filter markers on the map
+currentLocations.subscribe(function() {
+  if (infoWindow) {
+    infoWindow.close();
   }
+  filterMarkers();
+});
+
+// clicking on location name opens infowindow
+showLocation = function(location) {
+  marker = $.grep(markers, function(marker){ return marker.locationIndex === location.index; });
+  showInfoWindow(marker[0], location.wikiContent);
+  };
 }
 
 function filterMarkers() {
+  map.panTo(mapCenter);
   let locationIndex;
   for (let i = 0; i < markers.length; i++) {
      locationIndex = markers[i].locationIndex;
@@ -141,8 +143,9 @@ function showInfoWindow(marker, content) {
   infoWindow = new google.maps.InfoWindow();
   infoWindow.setContent(content);
   marker.setAnimation(google.maps.Animation.BOUNCE);
-  setTimeout(function(){ marker.setAnimation(null); }, 750);
+  setTimeout(function(){ marker.setAnimation(null); }, 700);
   infoWindow.open(map, marker);
+  map.panTo(marker.getPosition());
 }
 
 function getWikiData(location, addMarker) {
@@ -192,5 +195,9 @@ function getWikiData(location, addMarker) {
   });
 }
 
+function onMapLoadError() {
+  alert("Google maps failed to load at this time. Please try again.");
+}
+
 // Activates knockout.js
-ko.applyBindings(new mapViewModel());
+ko.applyBindings(new MapViewModel());

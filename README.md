@@ -12,7 +12,9 @@ Features include:
 
 ## The Site
 
-The website is hosted on Github pages:
+To run the app, open src/index.html in a browser of your choice.
+
+The website is also hosted on Github pages:
 [https://ahahn15.github.io/Neighborhood-Map/](https://ahahn15.github.io/Neighborhood-Map/)
 
 This site uses the KnockoutJS framework to implement observables, event handlers, filters, and to handle other state changes. It uses the Google Maps API along with markers and infowindows, and the Wikimedia API to access Wikipedia content for each location. All API calls are made asynchronously with appropriate error handling.

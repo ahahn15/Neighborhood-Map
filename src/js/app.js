@@ -122,10 +122,6 @@ function mapViewModel() {
   }
 }
 
-function findMarker(marker, index) {
-  return marker.locationIndex === index;
-}
-
 function filterMarkers() {
   let locationIndex;
   for (let i = 0; i < markers.length; i++) {
@@ -195,10 +191,6 @@ function getWikiData(location, addMarker) {
       alert("An error occurred loading Wikipedia content. Please try again.");
     }
   });
-}
-
-function mapError() {
-  alert("Map was unable to load. Please try again.");
 }
 
 // Activates knockout.js

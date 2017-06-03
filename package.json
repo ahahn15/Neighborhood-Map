@@ -1,0 +1,24 @@
+{
+  "name": "neighborhood-map",
+  "version": "1.0.0",
+  "description": "A neighborhood map created using Google Maps and KnockoutJS",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp-clean-css": "^3.4.1",
+    "gulp": "^3.9.1",
+    "gulp-html-minify": "^0.0.14",
+    "gulp-install": "^0.6.0",
+    "gulp-uglify": "^3.0.0",
+    "pump": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-ahahn:ahahn15/Neighborhood-Map.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

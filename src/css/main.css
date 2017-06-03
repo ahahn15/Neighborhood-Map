@@ -37,10 +37,6 @@ body {
    float: right;
 }
 
-#filter-row {
-
-}
-
 #location-list {
    padding-left: 24px;
 }
@@ -59,5 +55,10 @@ li:nth-child(even) {
 
 #map {
    height: 100%;
+   display: block;
+}
+
+.image {
+   margin: 0 auto;
    display: block;
 }

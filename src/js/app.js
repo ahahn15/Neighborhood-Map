@@ -40,6 +40,13 @@ let locations = [
     lng: -9.0021,
     index: 5,
     wikiContent: ""
+  },
+  {
+    name:'Ailladie',
+    lat: 53.0731,
+    lng: -9.3549,
+    index: 6,
+    wikiContent: ""
   }];
 
 let filter;
@@ -163,6 +170,7 @@ function getWikiData(location, addMarker) {
     dataType: "jsonp",
     success: function(response) {
       let wikiContent = response[2][0];
+      let wikiArticleUrl = response[3][0];
       // if wikipedia summary call is successful, get image
       $.ajax({
         url: wikiImageUrl,
@@ -178,6 +186,7 @@ function getWikiData(location, addMarker) {
               '<div class="image-container">' +
                 '<img class="image" src='+ imageSource +'>' +
               '</div>' +
+              '<a href="' + wikiArticleUrl + '" target="_blank">Go to Wikipedia</a>' +
             '</div>';
 
             location.wikiContent = contentString;

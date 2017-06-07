@@ -153,7 +153,15 @@ function showInfoWindow(marker, content) {
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(function(){ marker.setAnimation(null); }, 700);
   infoWindow.open(map, marker);
-  map.panTo(marker.getPosition());
+
+  // pan to 150 px below marker
+  let overlay = new google.maps.OverlayView();
+  overlay.setMap(map);
+  let point = overlay.getProjection().fromLatLngToContainerPixel(marker.getPosition());
+  point.y -= 150;
+  let latlng = overlay.getProjection().fromContainerPixelToLatLng(point);
+
+  map.panTo(latlng);
 }
 
 function getWikiData(location, addMarker) {

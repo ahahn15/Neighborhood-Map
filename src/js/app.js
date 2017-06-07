@@ -132,6 +132,7 @@ showLocation = function(location) {
 
 function filterMarkers() {
   map.panTo(mapCenter);
+  map.setZoom(11);
   let locationIndex;
   for (let i = 0; i < markers.length; i++) {
      locationIndex = markers[i].locationIndex;
